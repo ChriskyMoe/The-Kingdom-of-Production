@@ -1,0 +1,335 @@
+@import 'tailwindcss';
+
+/* ── Theme: Pixel RPG (16-bit) — palette based on Sweetie 16 ───────────── */
+:root {
+  --bg: #1a1c2c;
+  --surface: #262b52; /* RPG window navy */
+  --surface-2: #333c57;
+  --line: #566c86;
+  --faint: #8597b0;
+  --text: #f4f4f4;
+  --muted: #b8c7d6;
+
+  --accent: #a7f070; /* lime — saves, XP, success */
+  --accent-2: #ffcd75; /* gold — quests, titles, rewards */
+  --info: #41a6f6; /* sky blue — humans, links */
+  --warn: #ef7d57; /* orange — live demo, warnings */
+  --danger: #ff5a6a; /* red — damage, failure */
+  --good: #38b764;
+  --magic: #c58cf2; /* violet — AI companion */
+
+  --sky-top: #29366f;
+  --sky-bottom: #3b5dc9;
+
+  --mark-a: #a7f070;
+  --mark-b: #ffcd75;
+
+  --glow-green: rgb(167 240 112 / 0.25);
+  --glow-purple: rgb(197 140 242 / 0.22);
+  --tint-green: rgb(167 240 112 / 0.14);
+  --tint-purple: rgb(197 140 242 / 0.16);
+  --tint-blue: rgb(65 166 246 / 0.16);
+  --tint-red: rgb(255 90 106 / 0.16);
+  --tint-amber: rgb(255 205 117 / 0.16);
+
+  --font-head: 'Press Start 2P', monospace;
+  --font-body: 'Pixelify Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-faint: var(--faint);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-info: var(--info);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-good: var(--good);
+  --color-magic: var(--magic);
+  --color-tint-green: var(--tint-green);
+  --color-tint-purple: var(--tint-purple);
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-red: var(--tint-red);
+  --color-tint-amber: var(--tint-amber);
+  --font-head: var(--font-head);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    background: #0b0c16;
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow: hidden;
+    -webkit-font-smoothing: none;
+  }
+  button {
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--accent-2);
+    outline-offset: 2px;
+  }
+  a {
+    color: var(--info);
+  }
+  img {
+    image-rendering: pixelated;
+  }
+}
+
+/* Stage background: night sky with a pixel star field */
+.stage-bg {
+  background:
+    radial-gradient(2px 2px at 12% 18%, #f4f4f4 50%, transparent 51%),
+    radial-gradient(2px 2px at 34% 8%, #94b0c2 50%, transparent 51%),
+    radial-gradient(2px 2px at 58% 22%, #f4f4f4 50%, transparent 51%),
+    radial-gradient(2px 2px at 81% 12%, #ffcd75 50%, transparent 51%),
+    radial-gradient(2px 2px at 92% 30%, #94b0c2 50%, transparent 51%),
+    linear-gradient(#1a1c2c, #20233f 60%, #1a1c2c);
+}
+
+@layer components {
+  /* RPG window — the deck's signature motif: white double frame, navy fill, hard pixel shadow */
+  .panel,
+  .rpg {
+    background: linear-gradient(180deg, #2d3466, var(--surface));
+    border: 3px solid #f4f4f4;
+    outline: 3px solid #0b0c16;
+    box-shadow:
+      inset 0 0 0 2px #5d6db8,
+      6px 6px 0 0 rgb(0 0 0 / 0.55);
+    border-radius: 4px;
+  }
+  .rpg-plain {
+    background: rgb(26 28 44 / 0.82);
+    border: 2px solid var(--line);
+    border-radius: 2px;
+  }
+  .hud {
+    position: relative;
+  }
+  .hud::before,
+  .hud::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--accent-2);
+    pointer-events: none;
+  }
+  .hud::before {
+    top: 4px;
+    left: 4px;
+  }
+  .hud::after {
+    bottom: 4px;
+    right: 4px;
+  }
+  .hud-purple::before,
+  .hud-purple::after {
+    background: var(--magic);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-head);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    padding: 5px 9px;
+    border: 2px solid var(--line);
+    background: var(--bg);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* Pixel button with a pressable 3D edge */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-head);
+    font-size: 11px;
+    line-height: 1.3;
+    padding: 10px 14px;
+    border: 3px solid #0b0c16;
+    background: #4a5486;
+    color: var(--text);
+    box-shadow:
+      inset -3px -3px 0 0 #2e3560,
+      inset 3px 3px 0 0 #7a86c2;
+    transition: transform 0.05s;
+  }
+  .btn:hover {
+    background: #5a66a0;
+  }
+  .btn:active {
+    transform: translateY(2px);
+    box-shadow:
+      inset 3px 3px 0 0 #2e3560,
+      inset -3px -3px 0 0 #7a86c2;
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: #38b764;
+    color: #0b0c16;
+    box-shadow:
+      inset -3px -3px 0 0 #257149,
+      inset 3px 3px 0 0 #a7f070;
+  }
+  .btn-primary:hover {
+    background: #45c873;
+  }
+  .btn-gold {
+    background: #ffcd75;
+    color: #0b0c16;
+    box-shadow:
+      inset -3px -3px 0 0 #c98d3b,
+      inset 3px 3px 0 0 #fff0c4;
+  }
+  .btn-red {
+    background: #b13e53;
+    box-shadow:
+      inset -3px -3px 0 0 #6e2232,
+      inset 3px 3px 0 0 #ef7d8f;
+  }
+  .btn[aria-pressed='true'] {
+    background: #38b764;
+    color: #0b0c16;
+    box-shadow:
+      inset 3px 3px 0 0 #257149,
+      inset -3px -3px 0 0 #a7f070;
+  }
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+.head {
+  font-family: var(--font-head);
+}
+.pixel {
+  font-family: var(--font-body);
+}
+
+.blink {
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.bob {
+  animation: bob 1.1s steps(2) infinite;
+}
+@keyframes bob {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.march {
+  stroke-dasharray: 8 8;
+  animation: march 1s linear infinite;
+}
+@keyframes march {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+.drift {
+  animation: drift 60s linear infinite;
+}
+@keyframes drift {
+  from {
+    transform: translateX(-200px);
+  }
+  to {
+    transform: translateX(1400px);
+  }
+}
+.shine {
+  animation: shine 1.6s ease-in-out infinite;
+}
+@keyframes shine {
+  50% {
+    filter: brightness(1.6) drop-shadow(0 0 6px var(--accent));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  .bob,
+  .float,
+  .march,
+  .drift,
+  .shine {
+    animation: none;
+  }
+}
+
+@media print {
+  @page {
+    size: 1280px 720px;
+    margin: 0;
+  }
+  body {
+    overflow: visible;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-slide {
+    position: relative !important;
+    transform: none !important;
+    page-break-after: always;
+    break-after: page;
+  }
+}
+
+.walk {
+  animation: walk 0.28s steps(2) infinite;
+}
+@keyframes walk {
+  50% {
+    transform: translateY(-5px) rotate(-4deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .walk {
+    animation: none;
+  }
+}
